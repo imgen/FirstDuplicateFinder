@@ -7,7 +7,7 @@ namespace Benchmark
     public class FirstDuplicateFinder
     {
         const int N = 1_000_000_000;
-        private int[] _ints = new int[N];
+        private readonly int[] _ints = new int[N];
 
         [IterationSetup]
         public void Setup()
@@ -43,7 +43,6 @@ namespace Benchmark
             _ints[N / 2] = N;
             int duplicate = FindFirstDuplicateWithRestoration(_ints);
         }
-        
         
         private int FindFirstDuplicate(int[] numbers)
         {
