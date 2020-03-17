@@ -23,30 +23,30 @@ namespace Benchmark
         {
             int duplicate = FindFirstDuplicate(_ints);
         }
-        
+
         [Benchmark]
         public void DuplicateInTheMiddle()
         {
             _ints[N / 2] = N;
             int duplicate = FindFirstDuplicate(_ints);
         }
-        
+
         [Benchmark]
-        public void NoDuplicateWithRestoration()
+        public void NoDuplicateWithDictionary()
         {
-            int duplicate = FindFirstDuplicateWithRestoration(_ints);
+            int duplicate = FindFirstDuplicateWithDictionary(_ints);
         }
-        
+
         [Benchmark]
-        public void DuplicateInTheMiddleWithRestoration()
+        public void DuplicateInTheMiddleWithDictionary()
         {
             _ints[N / 2] = N;
-            int duplicate = FindFirstDuplicateWithRestoration(_ints);
+            int duplicate = FindFirstDuplicateWithDictionary(_ints);
         }
-        
+
         private int FindFirstDuplicate(int[] numbers)
         {
-            for(int i = 0; i < numbers.Length; i++)
+            for (int i = 0; i < numbers.Length; i++)
             {
                 var number = numbers[i];
                 if (number < 0)
@@ -61,34 +61,21 @@ namespace Benchmark
             }
             return -1;
         }
-        
-        private int FindFirstDuplicateWithRestoration(int[] numbers)
+
+        private int FindFirstDuplicateWithDictionary(int[] numbers)
         {
-            var firstDuplicate = -1;
-            for(int i = 0; i < numbers.Length; i++)
-            {
-                var number = numbers[i];
-                if (number < 0)
-                {
-                    number = -number;
-                }
-                if (numbers[number - 1] < 0) // Found a duplicate
-                {
-                    firstDuplicate = number;
-                    break;
-                }
-                numbers[number - 1] = -numbers[number - 1]; // Mark that this number has appeared once
-            }
-            
-            // Restore data
+            var dict = new bool[numbers.Length + 1];
             for (int i = 0; i < numbers.Length; i++)
             {
-                if (numbers[i] < 0)
+                var number = numbers[i];
+                if (dict[number]) // Found a duplicate
                 {
-                    numbers[i] = -numbers[i];
+                    return number;
                 }
+                dict[number] = true; // Mark that this number has appeared once
             }
-            return firstDuplicate;
+
+            return -1;
         }
     }
 }
