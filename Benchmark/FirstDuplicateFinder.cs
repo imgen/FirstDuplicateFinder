@@ -1,4 +1,5 @@
 using BenchmarkDotNet.Attributes;
+using System.Collections.Generic;
 
 namespace Benchmark
 {
@@ -31,17 +32,30 @@ namespace Benchmark
             int duplicate = FindFirstDuplicate(_ints);
         }
 
+        //[Benchmark]
+        //public void NoDuplicateWithDictionary()
+        //{
+        //    int duplicate = FindFirstDuplicateWithDictionary(_ints);
+        //}
+
+        //[Benchmark]
+        //public void DuplicateInTheMiddleWithDictionary()
+        //{
+        //    _ints[N / 2] = N;
+        //    int duplicate = FindFirstDuplicateWithDictionary(_ints);
+        //}
+
         [Benchmark]
-        public void NoDuplicateWithDictionary()
+        public void NoDuplicateWithHashSet()
         {
-            int duplicate = FindFirstDuplicateWithDictionary(_ints);
+            int duplicate = FindFirstDuplicateWithHashSet(_ints);
         }
 
         [Benchmark]
-        public void DuplicateInTheMiddleWithDictionary()
+        public void DuplicateInTheMiddleWithHashSet()
         {
             _ints[N / 2] = N;
-            int duplicate = FindFirstDuplicateWithDictionary(_ints);
+            int duplicate = FindFirstDuplicateWithHashSet(_ints);
         }
 
         private int FindFirstDuplicate(int[] numbers)
@@ -73,6 +87,22 @@ namespace Benchmark
                     return number;
                 }
                 dict[number] = true; // Mark that this number has appeared once
+            }
+
+            return -1;
+        }
+
+        private int FindFirstDuplicateWithHashSet(int[] numbers)
+        {
+            var hashSet = new HashSet<int>(numbers.Length);
+            for (int i = 0; i < numbers.Length; i++)
+            {
+                var number = numbers[i];
+                if (hashSet.Contains(number)) // Found a duplicate
+                {
+                    return number;
+                }
+                hashSet.Add(number); // Mark that this number has appeared once
             }
 
             return -1;
